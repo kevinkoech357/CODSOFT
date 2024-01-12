@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% block head %}
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}"> -->
+
+    {{ bootstrap.load_css() }}
+
+    <title>2-Do</title>
+  {% endblock %}
+</head>
+<body>
+  <!-- Page content -->
+  {% block content %}
+    {% from 'bootstrap5/nav.html' import render_nav_item %}
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="{{ url_for('user.home') }}">2-Do</a>
+
+      <div class="navbar-nav mr-auto">
+        {{ render_nav_item('index', 'Home') }}
+        {{ render_nav_item('', 'About') }}
+      </div>
+
+      {% if current_user.is_authenticated %}
+        <div class="navbar-nav ml-auto">
+          {{ render_nav_item('logout', 'Logout') }}
+        </div>
+      {% else %}
+        <div class="navbar-nav ml-auto">
+          {{ render_nav_item('auth.login', 'Login') }}
+          {{ render_nav_item('auth.register', 'Signup') }}
+        </div>
+      {% endif %}
+    </nav>
+
+    {% from 'bootstrap4/utils.html' import render_messages %}
+    {{ render_messages(dismissible=True) }}
+
+    <main>...</main>
+
+    <footer class="mt-5 text-center">
+      <p>&copy; 2024 2-Do. All rights reserved.</p>
+    </footer>
+  {% endblock %}
+
+  {% block scripts %}
+    <!-- Optional JavaScript -->
+    {{ bootstrap.load_js() }}
+  {% endblock %}
+</body>
+</html>
