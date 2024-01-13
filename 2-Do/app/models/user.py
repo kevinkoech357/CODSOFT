@@ -7,7 +7,7 @@ import uuid
 
 
 def generate_uuid():
-    return str(uuid.uuid4())
+    return str(uuid.uuid4().hex)
 
 
 class User(db.Model, UserMixin):
@@ -16,13 +16,13 @@ class User(db.Model, UserMixin):
 
     Attributes:
         id (str): Unique user identifier.
-        username (str): User's last name.
+        username (str): User's username.
         email (str): User's email address.
         password_hash (str): Hashed user password.
         created_at (datetime): Timestamp of when the user was created.
 
     Relationships:
-        todo (List[Todo]): A list of todos associated with the user.
+        todos (List[Todo]): A list of todos associated with the user.
     """
 
     __tablename__ = "user"
@@ -38,7 +38,7 @@ class User(db.Model, UserMixin):
     )
 
     # Define the relationship with the Todo model
-    todo = db.relationship("Todo", back_populates="user")
+    todos = db.relationship("Todo", back_populates="user")
 
     def __init__(self, username, email, password):
         """
