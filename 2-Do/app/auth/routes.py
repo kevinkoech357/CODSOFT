@@ -6,6 +6,7 @@ from app import db
 
 auth = Blueprint("auth", __name__)
 
+
 @auth.route("/login", methods=["GET", "POST"])
 def login():
     """
@@ -14,14 +15,16 @@ def login():
     If the form is submitted and valid, logs in the user and redirects to the home.
     """
     if current_user.is_authenticated:
-        return redirect(
-            url_for("user.home")
-        )  # Redirect to homeif already logged in
+        return redirect(url_for("user.home"))  # Redirect to home if already logged in
 
     form = LoginForm()
     if form.validate_on_submit():
+        # Determine whether the identifier is a username or an email
+        identifier = form.identifier.data
         user = User.query.filter(
-            (User.username == form.username.data)).first()
+            (User.username == identifier) | (User.email == identifier)
+        ).first()
+
         if user and user.check_password(form.password.data):
             login_user(user)
             flash("Login successful!", "success")
@@ -40,7 +43,7 @@ def register():
     If the form is submitted and valid, creates a new user and redirects to the login page.
     """
     if current_user.is_authenticated:
-        return redirect(url_for("user.home")) # Redirect to home if already logged in
+        return redirect(url_for("user.home"))  # Redirect to home if already logged in
 
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -88,21 +91,18 @@ def logout():
     """
     logout_user()
     flash("You have been logged out.", "success")
-    return redirect(url_for("user.home"))  # Redirect to home after logout
+    return redirect(url_for("auth.login"))
 
 
-@auth.route("/reset-password", methods=["GET", "POST"])
+@auth.route("/reset_password", methods=["GET", "POST"])
 def reset_password():
     """
     Reset user password.
 
-    If the user is already authenticated, redirects to the dashboard.
     If the form is submitted and valid, resets the user's password and redirects to the login page.
     """
     if current_user.is_authenticated:
-        return redirect(
-            url_for("user.home")
-        )  # Redirect to home if already logged in
+        return redirect(url_for("user.home"))  # Redirect to home if already logged in
 
     form = ResetPasswordForm()
     if form.validate_on_submit():
