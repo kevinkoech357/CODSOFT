@@ -6,7 +6,7 @@ load_dotenv(".env")
 
 class App_Config:
     # Secret key for signing cookies
-    SECRET_KEY = os.environ.get("SECRET_KEY", "hello_world!")
+    SECRET_KEY = os.environ.get("SECRET_KEY")
     # Database URI. Default is SQLite in-memory database
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "SQLALCHEMY_DATABASE_URI", "sqlite:///test.db"
