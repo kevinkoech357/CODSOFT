@@ -1,37 +1,70 @@
-from werkzeug.security import generate_password_hash, check_password_hash
-from app import db
+import uuid
+import moment
+import datetime
+from app import db, bcrypt
 from sqlalchemy.orm import relationship
 from sqlalchemy import func
-import uuid
 
 
 def generate_uuid():
-    return str(uuid.uuid4())
+    return str(uuid.uuid4().hex)
 
 
-class User(db.Model, UserMixin):
+class User(db.Model):
     """
-    User model for representing user data.
+    Model representing a user.
 
     Attributes:
-        id (str): Unique user identifier.
-        username (str): User's last name.
-        email (str): User's email address.
-        password_hash (str): Hashed user password.
-        created_at (datetime): Timestamp of when the user was created.
-
-    Relationships:
-        todo (List[Todo]): A list of todos associated with the user.
+        id (int): The unique identifier for the user.
+        username (str): The username of the user.
+        email (str): The email address of the user.
+        password (str): The hashed password of the user.
+        contacts (list of Contact): List of contacts associated with the user.
+        created_at (str): Human-readable timestamp indicating when the user was created.
     """
 
-    __tablename__ = "user"
+    __tablename__ = "users"
 
-    id = db.Column(
-        db.String(32), primary_key=True, default=generate_uuid, nullable=False
-    )
-    username = db.Column(db.String(50), nullable=False)
+    id = db.Column(db.String(32), default=generate_uuid, primary_key=True)
+    username = db.Column(db.String(50), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String(128), nullable=False)
+    password = db.Column(db.String(60), nullable=False)
+    contacts = db.relationship("Contact", backref="user", lazy=True)
     created_at = db.Column(
-        db.TIMESTAMP(timezone=True), server_default=func.now(), nullable=False
+        db.String, default=moment.utcnow().format("YYYY-MM-DD HH:mm:ss"), nullable=False
     )
+
+    def __init__(self, username, email, password):
+        self.username = username
+        self.email = email
+        self.password = bcrypt.generate_password_hash(password).decode("utf-8")
+        self.created_at = moment.utcnow().format("YYYY-MM-DD HH:mm:ss")
+
+    def check_password(self, password):
+        """
+        Check if the provided password matches the user's hashed password.
+
+        Args:
+            password (str): The password to check.
+
+        Returns:
+            bool: True if the password is correct, False otherwise.
+        """
+        return bcrypt.check_password_hash(self.password, password)
+
+    def __repr__(self):
+        return f"User(id={self.id}, username='{self.username}', email='{self.email}', created_at={self.created_at})"
+
+    def to_dict(self, username, email, created_at):
+        """
+        Convert the user object to a dictionary.
+
+        Returns:
+            dict: A dictionary representation of the user object.
+        """
+        return {
+            "id": self.id,
+            "username": self.username,
+            "email": self.email,
+            "created_at": self.created_at,
+        }
