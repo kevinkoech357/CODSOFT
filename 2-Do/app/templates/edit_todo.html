@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Todo{% endblock %}
+
+{% block content %}
+    <h5>Edit Todo</h5>
+
+    {% from 'bootstrap5/form.html' import render_hidden_errors %}
+
+    <form method="post" action="{{ url_for('user.edit_todo', todo_id=todo.id) }}">
+        {{ form.csrf_token }}
+        {{ form.hidden_tag() }}
+        {{ render_hidden_errors(form) }}
+
+        <div class="mb-3">
+            {{ form.title.label(class="form-label") }}
+            {{ form.title(value=form.title.data, class="form-control", placeholder="Enter Todo Title") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.content.label(class="form-label") }}
+            {{ form.content(value=form.content.data, class="form-control", placeholder="Enter Todo Content") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.category.label(class="form-label") }}
+            {{ form.category(class="form-select", placeholder="Choose Category") }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Edit Todo</button>
+    </form>
+{% endblock %}

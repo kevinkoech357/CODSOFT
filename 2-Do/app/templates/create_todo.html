@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Todo{% endblock %}
+
+{% block content %}
+    <h5>Create a New Todo</h5>
+
+    {% from 'bootstrap5/form.html' import render_hidden_errors %}
+
+
+    <form method="post" action="{{ url_for('user.create_todo') }}">
+        {{ form.csrf_token }}
+        {{ form.hidden_tag() }}
+        {{ render_hidden_errors(form) }}
+
+
+
+        <div class="mb-3">
+            {{ form.title.label(class="form-label") }}
+            {{ form.title(class="form-control", placeholder="Enter Todo Title") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.content.label(class="form-label") }}
+            {{ form.content(class="form-control", placeholder="Enter Todo Content") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.category.label(class="form-label") }}
+            {{ form.category(class="form-select", placeholder="Choose Category") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.start_time.label(class="form-label") }}
+            {{ form.start_time(class="form-control", placeholder="Enter Start Time") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.end_time.label(class="form-label") }}
+            {{ form.end_time(class="form-control", placeholder="Enter End Time") }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create Todo</button>
+    </form>
+{% endblock %}

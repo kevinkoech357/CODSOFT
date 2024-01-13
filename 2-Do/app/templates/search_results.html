@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+    <h5>Search Results for "{{ query }}"</h5>
+
+    {% if todos %}
+           <div class="row">
+        {% for todo in todos %}
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="card-title">{{ todo.title }}</h5>
+                            <p class="card-text"><small class="text-muted">Category: {{ todo.category}}</small></p>
+                        </div>
+                        <p class="card-text">{{ todo.content }}</p>
+                        <div class="d-flex justify-content-between">
+                            <p class="card-text"><small class="text-muted">Start Time: {{ todo.start_time }}</small></p>
+                            <p class="card-text"><small class="text-muted">End Time: {{ todo.end_time }}</small></p>
+                        </div>
+                        <a href="{{ url_for('user.edit_todo', todo_id=todo.id) }}" class="btn btn-primary">Edit</a>
+                        <a href="{{ url_for('user.delete_todo', todo_id=todo.id) }}" class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p>No results found for "{{ query }}"</p>
+    {% endif %}
+{% endblock %}
