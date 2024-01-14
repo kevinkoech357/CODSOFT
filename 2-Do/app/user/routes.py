@@ -163,9 +163,10 @@ def search():
     """
     query = request.args.get("query", "")
 
-    # Perform the search based on the title or category
+     # Perform the search based on the title or category, and associated with the logged-in user
     todos = Todo.query.filter(
-        or_(Todo.title.ilike(f"%{query}%"), Todo.category.ilike(f"%{query}%"))
+        (Todo.title.ilike(f"%{query}%") | Todo.category.ilike(f"%{query}%")) &
+        (Todo.user_id == current_user.id)
     ).all()
 
     # Render the search results
