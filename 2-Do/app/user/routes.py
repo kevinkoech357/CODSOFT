@@ -7,13 +7,13 @@ from flask import (
     request,
     jsonify,
     flash,
-    request,
 )
 from flask_login import login_required, current_user
 from app.models.todo import Todo
 from app.user.form import CreateTodoForm, EditTodoForm
 from app import db
 from sqlalchemy import or_
+from app.auth.forms import LoginForm
 
 user = Blueprint("user", __name__)
 
@@ -25,6 +25,12 @@ def is_valid_uuid(user_id):
         return True
     except ValueError:
         return False
+
+
+@user.route("/", methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+    return render_template("login.html", form=form)
 
 
 @user.route("/home", methods=["GET", "POST"])
