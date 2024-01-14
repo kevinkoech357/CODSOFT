@@ -6,7 +6,6 @@ for input and computes the output.
 """
 
 from typing import Union
-from operands import add, subtract, multiply, divide, find_remainder
 
 
 def intro():
