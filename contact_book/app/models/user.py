@@ -1,8 +1,6 @@
 import uuid
-import moment
-import datetime
+from datetime import datetime
 from app import db, bcrypt
-from sqlalchemy.orm import relationship
 from sqlalchemy import func
 
 
@@ -31,14 +29,17 @@ class User(db.Model):
     password = db.Column(db.String(60), nullable=False)
     contacts = db.relationship("Contact", backref="user", lazy=True)
     created_at = db.Column(
-        db.String, default=moment.utcnow().format("YYYY-MM-DD HH:mm:ss"), nullable=False
+        db.DateTime(),
+        default=datetime.utcnow,
+        nullable=False,
+        server_default=func.now(),
     )
 
     def __init__(self, username, email, password):
         self.username = username
         self.email = email
         self.password = bcrypt.generate_password_hash(password).decode("utf-8")
-        self.created_at = moment.utcnow().format("YYYY-MM-DD HH:mm:ss")
+        self.created_at = datetime.utcnow
 
     def check_password(self, password):
         """
@@ -54,17 +55,3 @@ class User(db.Model):
 
     def __repr__(self):
         return f"User(id={self.id}, username='{self.username}', email='{self.email}', created_at={self.created_at})"
-
-    def to_dict(self, username, email, created_at):
-        """
-        Convert the user object to a dictionary.
-
-        Returns:
-            dict: A dictionary representation of the user object.
-        """
-        return {
-            "id": self.id,
-            "username": self.username,
-            "email": self.email,
-            "created_at": self.created_at,
-        }

@@ -1,12 +1,11 @@
 import uuid
-import moment
-import datetime
+from datetime import datetime
 from app import db
 from sqlalchemy import func
 
 
 def generate_uuid():
-    return str(uuid.uuid4().hex)
+    return str(uuid.uuid4())
 
 
 class Contact(db.Model):
@@ -26,20 +25,33 @@ class Contact(db.Model):
 
     __tablename__ = "contacts"
 
-    id = db.Column(db.String(32), default=generate_uuid, primary_key=True)
-    user_id = db.Column(db.String(32), db.ForeignKey("users.id"), nullable=False)
+    id = db.Column(db.String(36), default=generate_uuid, primary_key=True)
+    user_id = db.Column(db.String(36), db.ForeignKey("users.id"), nullable=False)
     contact_name = db.Column(db.String(50), nullable=False)
     phone_number = db.Column(db.String(20), nullable=True)
     email = db.Column(db.String(120), nullable=True)
     address = db.Column(db.String(255), nullable=True)
     created_at = db.Column(
-        db.String, default=moment.utcnow().format("YYYY-MM-DD HH:mm:ss"), nullable=False
+        db.DateTime, default=datetime.utcnow, nullable=False, server_default=func.now()
     )
     updated_at = db.Column(
-        db.String,
-        onupdate=moment.utcnow().format("YYYY-MM-DD HH:mm:ss"),
+        db.DateTime,
+        onupdate=func.now(),
         nullable=False,
+        server_default=func.now(),
     )
 
     def __repr__(self):
-        return f"Contact(id={self.id}, user_id={self.user_id}, name='{self.name}', phone_number='{self.phone_number}', email='{self.email}', address='{self.address}', created_at={self.created_at}, updated_at={self.updated_at})"
+        return f"Contact(id={self.id}, user_id={self.user_id}, contact_name='{self.contact_name}', phone_number='{self.phone_number}', email='{self.email}', address='{self.address}', created_at={self.created_at.isoformat()}, updated_at={self.updated_at.isoformat()})"
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "contact_name": self.contact_name,
+            "phone_number": self.phone_number,
+            "email": self.email,
+            "address": self.address,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+        }
