@@ -17,6 +17,7 @@ api = Api(
     version="1.0",
     title="Contact API",
     description="API for managing contacts",
+    url_prefix="/api/v1",
 )
 
 

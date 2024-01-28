@@ -1,6 +1,4 @@
 import uuid
-from flask_restx import fields
-from app import api
 
 
 # Valid if ID is in uuid format
