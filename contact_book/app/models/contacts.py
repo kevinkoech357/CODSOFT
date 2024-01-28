@@ -43,15 +43,3 @@ class Contact(db.Model):
 
     def __repr__(self):
         return f"Contact(id={self.id}, user_id={self.user_id}, contact_name='{self.contact_name}', phone_number='{self.phone_number}', email='{self.email}', address='{self.address}', created_at={self.created_at.isoformat()}, updated_at={self.updated_at.isoformat()})"
-
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "contact_name": self.contact_name,
-            "phone_number": self.phone_number,
-            "email": self.email,
-            "address": self.address,
-            "created_at": self.created_at,
-            "updated_at": self.updated_at,
-        }

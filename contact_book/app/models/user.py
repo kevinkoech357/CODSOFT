@@ -1,5 +1,4 @@
 import uuid
-from datetime import datetime
 from app import db, bcrypt
 from sqlalchemy import func
 
@@ -29,9 +28,7 @@ class User(db.Model):
     password = db.Column(db.String(60), nullable=False)
     contacts = db.relationship("Contact", backref="user", lazy=True)
     created_at = db.Column(
-        db.DateTime(),
-        default=datetime.utcnow,
-        nullable=False,
+        db.DateTime(timezone=True),
         server_default=func.now(),
     )
 
@@ -39,7 +36,6 @@ class User(db.Model):
         self.username = username
         self.email = email
         self.password = bcrypt.generate_password_hash(password).decode("utf-8")
-        self.created_at = datetime.utcnow
 
     def check_password(self, password):
         """
