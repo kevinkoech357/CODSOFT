@@ -15,16 +15,37 @@
         <div class="mb-3">
             {{ form.title.label(class="form-label") }}
             {{ form.title(value=form.title.data, class="form-control", placeholder="Enter Todo Title") }}
+            {% if form.title.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {% for error in form.title.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
 
         <div class="mb-3">
             {{ form.content.label(class="form-label") }}
             {{ form.content(value=form.content.data, class="form-control", placeholder="Enter Todo Content") }}
+            {% if form.content.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {% for error in form.content.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
 
         <div class="mb-3">
             {{ form.category.label(class="form-label") }}
             {{ form.category(class="form-select", placeholder="Choose Category") }}
+            {% if form.category.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {% for error in form.category.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
 
         <button type="submit" class="btn btn-primary">Edit Todo</button>

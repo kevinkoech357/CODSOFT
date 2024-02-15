@@ -8,7 +8,6 @@
 
         {% from 'bootstrap5/form.html' import render_hidden_errors %}
 
-
         <form method="post" action="{{ url_for('auth.register') }}">
             {{ form.hidden_tag() }}
             {{ render_hidden_errors(form) }}
@@ -16,19 +15,47 @@
             <div class="mb-3">
                 {{ form.username.label(class="form-label") }}
                 {{ form.username(class="form-control", placeholder="Username") }}
+                {% if form.username.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for error in form.username.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
             <div class="mb-3">
                 {{ form.email.label(class="form-label") }}
                 {{ form.email(class="form-control", placeholder="Email Address") }}
                 <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                {% if form.email.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for error in form.email.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
             <div class="mb-3">
                 {{ form.password.label(class="form-label") }}
                 {{ form.password(class="form-control", placeholder="Password") }}
+                {% if form.password.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for error in form.password.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
             <div class="mb-3">
                 {{ form.confirm_password.label(class="form-label") }}
                 {{ form.confirm_password(class="form-control", placeholder="Confirm Password") }}
+                {% if form.confirm_password.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for error in form.confirm_password.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
             {{ form.submit(class="btn btn-primary") }}
         </form>
