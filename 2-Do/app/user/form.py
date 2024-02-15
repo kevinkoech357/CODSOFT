@@ -4,8 +4,12 @@ from wtforms.validators import DataRequired
 
 
 class CreateTodoForm(FlaskForm):
-    title = StringField("Todo Title")
-    content = TextAreaField("Todo Content", validators=[DataRequired()])
+    title = StringField(
+        "Todo Title", validators=[DataRequired(message="Title is required.")]
+    )
+    content = TextAreaField(
+        "Todo Content", validators=[DataRequired(message="Content is required.")]
+    )
     category_choices = [
         ("School", "School"),
         ("Chores", "Chores"),
@@ -16,16 +20,26 @@ class CreateTodoForm(FlaskForm):
         ("Recreation", "Recreation"),
     ]
     category = SelectField(
-        "Todo Category", choices=category_choices, validators=[DataRequired()]
+        "Todo Category",
+        choices=category_choices,
+        validators=[DataRequired(message="Category is required.")],
     )
-    start_time = TimeField("Start Time", validators=[DataRequired()])
-    end_time = TimeField("End Time", validators=[DataRequired()])
+    start_time = TimeField(
+        "Start Time", validators=[DataRequired(message="Start time is required.")]
+    )
+    end_time = TimeField(
+        "End Time", validators=[DataRequired(message="End time is required.")]
+    )
     submit = SubmitField("Create Todo")
 
 
 class EditTodoForm(FlaskForm):
-    title = StringField("Todo Title")
-    content = TextAreaField("Todo Content", validators=[DataRequired()])
+    title = StringField(
+        "Todo Title", validators=[DataRequired(message="Title is required.")]
+    )
+    content = TextAreaField(
+        "Todo Content", validators=[DataRequired(message="Content is required.")]
+    )
     category_choices = [
         ("School", "School"),
         ("Chores", "Chores"),
@@ -36,6 +50,8 @@ class EditTodoForm(FlaskForm):
         ("Recreation", "Recreation"),
     ]
     category = SelectField(
-        "Todo Category", choices=category_choices, validators=[DataRequired()]
+        "Todo Category",
+        choices=category_choices,
+        validators=[DataRequired(message="Category is required.")],
     )
     submit = SubmitField("Update Todo")

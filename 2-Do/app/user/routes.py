@@ -44,22 +44,74 @@ def home():
         - todo_content: Content of the todo (required)
         - todo_category: Category of the todo (required)
     """
+
     if request.method == "POST":
+        # Handle form submission for creating a new todo
         todo_content = request.form.get("todo_content")
         todo_category = request.form.get("todo_category")
 
         if not todo_content or not todo_category:
-            return jsonify({"status": "error", "message": "Incomplete data"})
+            flash("Please provide content and category for the todo.", "error")
+            return redirect(url_for("user.home"))
 
+        # Create a new todo
         new_todo = Todo(
-            content=todo_content, category=todo_category, user_id=current_user.id
+            user=current_user,
+            title="New Todo",
+            content=todo_content,
+            category=todo_category,
         )
         db.session.add(new_todo)
         db.session.commit()
 
-    todos = Todo.query.filter_by(user_id=current_user.id).all()
+        flash("Todo created successfully.", "success")
+        return redirect(url_for("user.home"))
 
-    return render_template("index.html", user=current_user, todos=todos)
+    # For GET requests
+    try:
+        page = int(request.args.get("page", 1))
+        sort_by = request.args.get("sort_by", "created_at")
+        sort_direction = request.args.get("sort_direction", "asc")
+
+        if sort_direction not in ["asc", "desc"]:
+            raise ValueError("Invalid sort direction.")
+
+        per_page = 10  # Number of items per page
+
+        # Determine the sorting column
+        if sort_by == "title":
+            sort_column = Todo.title
+        elif sort_by == "category":
+            sort_column = Todo.category
+        elif sort_by == "start_time":
+            sort_column = Todo.start_time
+        elif sort_by == "end_time":
+            sort_column = Todo.end_time
+        else:
+            sort_column = Todo.created_at
+
+        # Retrieve todos for the current page and sort them
+        todos = (
+            Todo.query.filter_by(user_id=current_user.id)
+            .order_by(
+                sort_column.asc() if sort_direction == "asc" else sort_column.desc()
+            )
+            .paginate(page=page, per_page=per_page)
+        )
+
+        # Pass the todos, sorting parameters,
+        # and pagination info to the template
+        return render_template(
+            "index.html",
+            user=current_user,
+            todos=todos.items,
+            todos_pagination=todos,
+            sort_by=sort_by,
+            sort_direction=sort_direction,
+        )
+    except ValueError as e:
+        flash(str(e), "error")
+        return redirect(url_for("user.home"))
 
 
 @user.route("/create_todo", methods=["GET", "POST"])
@@ -163,10 +215,11 @@ def search():
     """
     query = request.args.get("query", "")
 
-     # Perform the search based on the title or category, and associated with the logged-in user
+    # Perform the search based on the title or category,
+    # and associated with the logged-in user
     todos = Todo.query.filter(
-        (Todo.title.ilike(f"%{query}%") | Todo.category.ilike(f"%{query}%")) &
-        (Todo.user_id == current_user.id)
+        (Todo.title.ilike(f"%{query}%") | Todo.category.ilike(f"%{query}%"))
+        & (Todo.user_id == current_user.id)
     ).all()
 
     # Render the search results
