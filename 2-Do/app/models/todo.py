@@ -2,6 +2,7 @@ from datetime import datetime
 from app import db
 from sqlalchemy.orm import relationship
 import uuid
+from sqlalchemy import Index
 
 
 # Helper function to generate a random UUID in hex format
@@ -34,9 +35,9 @@ class Todo(db.Model):
         db.String(32), primary_key=True, default=generate_uuid, nullable=False
     )
     user_id = db.Column(db.String(32), db.ForeignKey("user.id"), nullable=False)
-    title = db.Column(db.String(255), nullable=True)
-    content = db.Column(db.String(255), nullable=True)
-    category = db.Column(db.String(50))
+    title = db.Column(db.String(255), nullable=False)
+    content = db.Column(db.String(255), nullable=False)
+    category = db.Column(db.String(50), nullable=False)
     start_time = db.Column(db.Time)
     end_time = db.Column(db.Time)
     created_at = db.Column(
@@ -53,6 +54,11 @@ class Todo(db.Model):
 
     # Define a relationship between the Todo and User models
     user = relationship("User", back_populates="todos")
+
+    # Add indexes
+    idx_user_id = Index("idx_user_id", "user_id")
+    idx_created_at = Index("idx_created_at", "created_at")
+    idx_start_time = Index("idx_start_time", "start_time")
 
     def __init__(
         self,
