@@ -16,5 +16,5 @@ class App_Config:
     # Disable echoing SQL statements to the console
     SQLALCHEMY_ECHO = False
     # Bootstrap config
-    BOOTSTRAP_BOOTSWATCH_THEME = "lux"
+    BOOTSTRAP_BOOTSWATCH_THEME = "sandstone"
     BOOTSTRAP_SERVE_LOCAL = True
