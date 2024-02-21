@@ -1,4 +1,5 @@
 import os
+import datetime
 from dotenv import load_dotenv
 
 load_dotenv(".env")
@@ -15,3 +16,10 @@ class App_Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # Disable echoing SQL statements to the console
     SQLALCHEMY_ECHO = False
+
+    # Session App_Config
+    SESSION_TYPE = "sqlalchemy"
+    PERMANENT_SESSION_LIFETIME = datetime.timedelta(days=30)
+
+    # RestX App_Config
+    RESTX_VALIDATE = True
