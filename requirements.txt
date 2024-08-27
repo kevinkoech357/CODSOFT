@@ -24,7 +24,7 @@ flask-sqlalchemy==3.1.1
 flask-wtf==1.2.1
 greenlet==3.0.3
 gunicorn==22.0.0
-idna==3.6
+idna==3.7
 importlib-resources==6.1.1
 inflection==0.5.1
 itsdangerous==2.1.2
