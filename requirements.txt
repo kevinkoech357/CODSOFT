@@ -46,6 +46,7 @@ pytzdata==2020.1
 referencing==0.32.1
 regex==2023.12.25
 rpds-py==0.16.2
+ruff==0.6.2
 six==1.16.0
 sqlalchemy==2.0.25
 times==0.7
