@@ -2,3 +2,8 @@ env/
 __pycache__/
 instance/
 .env
+.venv/
+*.sh
+*.log
+2-Do/gunicorn_config.py
+contact_book/gunicorn_config.py
